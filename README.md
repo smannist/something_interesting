@@ -28,8 +28,6 @@ pytest
 python main.py --method init
 ```
 
-## Fetch the data
-
 ```bash
 python main.py
 ```
