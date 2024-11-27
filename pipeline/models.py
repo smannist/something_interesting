@@ -1,7 +1,7 @@
 from sqlalchemy import Column, Integer, String, Float, Date
-from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import declarative_base
 
-from .const import TABLE_NAME 
+from pipeline.const import TABLE_NAME 
 
 # Define the base model class
 Base = declarative_base()

@@ -1,11 +1,10 @@
 import argparse
+import os
 from pipeline import initialize_database, run_etl, reset_enviroment
 from typing import Literal
-import os
 
 DB_FOLDER = "db"
 DB_PATH = f"{DB_FOLDER}/applications.db"
-
 
 class PipelineArguments(argparse.Namespace):
     method: Literal["init", "reset", "etl"]

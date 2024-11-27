@@ -1,5 +1,5 @@
 from sqlalchemy import create_engine
-from .models import VantaaOpenApplications
+from pipeline.models import VantaaOpenApplications
 import os
 
 

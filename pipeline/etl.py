@@ -3,8 +3,10 @@ import requests
 from sqlalchemy import create_engine, orm
 from datetime import date
 
-from .const import API_URL
-from .models import VantaaOpenApplications
+from pipeline.const import API_URL
+from pipeline.models import VantaaOpenApplications
+from pipeline.raw_schema import VOASchemaRaw
+from pipeline.transform_schema import VOASchemaTransform
 
 
 class SimpleExtractor:
@@ -20,7 +22,11 @@ class SimpleExtractor:
     def extract(self) -> pd.DataFrame:
         response = self.fetch_data()
         response.raise_for_status()
-        return pd.DataFrame(response.json())
+        # with pandantic the schemas (models) have extra functionality parse_df which can be used for easy validation
+        return VOASchemaRaw.parse_df(
+            dataframe=pd.DataFrame(response.json()),
+            errors="raise"
+        )
 
     def __call__(self) -> pd.DataFrame:
         return self.extract()
@@ -52,7 +58,10 @@ class SimpleTransformer:
         return df
 
     def transform(self, df: pd.DataFrame) -> pd.DataFrame:
-        return df.pipe(self._rename_columns).pipe(self._transform_dates)
+        return VOASchemaTransform.parse_df(
+            dataframe=df.pipe(self._rename_columns).pipe(self._transform_dates),
+            errors="raise"
+        )
 
     def __call__(self, df: pd.DataFrame) -> pd.DataFrame:
         return self.transform(df=df)
